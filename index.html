@@ -54,7 +54,7 @@
                 Oferecer serviço
             </button>
 
-            <a href="#">
+            <a href="#" id="btn-entrar">
                 Entrar
             </a>
 
@@ -518,6 +518,64 @@
         </div>
 
     </div>
+
+    
+    <!-- MODAL DE LOGIN -->
+    <div id="modal-login" class="modal">
+        <div class="modal-conteudo cadastro-conteudo">
+
+            <button
+                id="fechar-login"
+                class="fechar-modal"
+                type="button"
+                aria-label="Fechar login"
+            >
+                ×
+            </button>
+
+        <div class="cadastro-header">
+            <span class="hero-tag">AION</span>
+            <h2>Bem-vindo de volta.</h2>
+            <p>Entre na sua conta para continuar.</p>
+        </div>
+
+        <form id="formulario-login">
+
+            <div class="campo">
+                <label for="login-usuario">Nome de usuário</label>
+                <input
+                    type="text"
+                    id="login-usuario"
+                    name="usuario"
+                    placeholder="Seu nome de usuário"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="campo">
+                <label for="login-senha">Senha</label>
+                <input
+                    type="password"
+                    id="login-senha"
+                    name="senha"
+                    placeholder="Sua senha (Minimo 8 Caracteres)"
+                    minlength="8"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="botao-enviar">
+                Entrar
+            </button>
+
+            <p id="mensagem-login" role="status"></p>
+
+            </form>
+        </div>
+    </div>
+
 
     <button
     id="voltar-topo"

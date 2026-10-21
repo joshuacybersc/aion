@@ -14,6 +14,11 @@ const perfilProfissional = document.getElementById("perfil-profissional");
 const abrirCadastro = document.getElementById("abrir-cadastro");
 const modalCadastro = document.getElementById("modal-cadastro");
 const fecharCadastro = document.getElementById("fechar-cadastro");
+const abrirLogin = document.getElementById("btn-entrar");
+const modalLogin = document.getElementById("modal-login");
+const fecharLogin = document.getElementById("fechar-login");
+const formularioLogin = document.getElementById("formulario-login");
+const mensagemLogin = document.getElementById("mensagem-login");
 const formularioCadastro = document.getElementById("formulario-cadastro");
 const novoServico = document.getElementById("novo-servico");
 const sugestoesCadastro = document.getElementById("sugestoes-cadastro");
@@ -481,6 +486,24 @@ fecharCadastro.addEventListener("click", () => {
     modalCadastro.classList.remove("ativo");
 });
 
+
+abrirLogin.addEventListener("click", event => {
+    event.preventDefault();
+    mensagemLogin.textContent = "";
+    formularioLogin.reset();
+    modalLogin.classList.add("ativo");
+});
+
+fecharLogin.addEventListener("click", () => {
+    modalLogin.classList.remove("ativo");
+});
+
+modalLogin.addEventListener("click", event => {
+    if (event.target === modalLogin) {
+        modalLogin.classList.remove("ativo");
+    }
+});
+
 modalCadastro.addEventListener("click", event => {
     if (event.target === modalCadastro) {
         modalCadastro.classList.remove("ativo");
@@ -489,10 +512,19 @@ modalCadastro.addEventListener("click", event => {
 
 document.addEventListener("keydown", event => {
     if (event.key === "Escape") {
+        modalLogin.classList.remove("ativo");
         modal.classList.remove("ativo");
         modalCadastro.classList.remove("ativo");
     }
 });
+
+formularioLogin.addEventListener("submit", event => {
+    event.preventDefault();
+
+    mensagemLogin.textContent =
+        "A tela está funcionando! A autenticação ainda será implementada no backend.";
+});
+
 
 // =============================
 // CADASTRAR PROFISSIONAL
