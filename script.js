@@ -223,6 +223,12 @@ function mostrarResultados(resultados) {
 
     const favoritos = lerListaSalva(CHAVE_FAVORITOS);
 
+    const avaliacoesDemo = {
+        "João da Silva": { media: 4.8, quantidade: 23 },
+        "Carlos Souza": { media: 4.5, quantidade: 12 },
+        "Marcos Pereira": { media: 4.9, quantidade: 31 }
+    };
+
     let listaExibida = mostrarSomenteFavoritos
         ? resultados.filter(profissional =>
             favoritos.includes(chaveProfissional(profissional))
@@ -285,6 +291,14 @@ function mostrarResultados(resultados) {
 
         card.className = "profissional";
 
+    const avaliacao = avaliacoesDemo[profissional.nome];
+    const media = avaliacao ? avaliacao.media : 0;
+    const quantidade = avaliacao ? avaliacao.quantidade : 0;
+
+    const estrelas = [1, 2, 3, 4, 5]
+        .map(numero => numero <= Math.round(media) ? "★" : "☆")
+        .join("");
+
         card.innerHTML = `
             <div class="cabecalho-card">
                 <div>
@@ -311,6 +325,16 @@ function mostrarResultados(resultados) {
             <p class="descricao">
                 ${escaparHTML(profissional.descricao)}
             </p>
+
+            <div class="avaliacao">
+                <span class="estrelas">${estrelas}</span>
+                <span class="media-avaliacao">
+                ${media > 0 ? media.toFixed(1).replace(".", ",") : "Sem avaliações"}
+            </span>
+            ${quantidade > 0
+                ? `<span class="quantidade-avaliacoes">(${quantidade})</span>`
+                : ""}
+            </div>
 
             <button type="button" class="ver-profissional">
                 Ver perfil e contato
@@ -518,18 +542,46 @@ document.addEventListener("keydown", event => {
     }
 });
 
-formularioLogin.addEventListener("submit", event => {
+
+formularioLogin.addEventListener("submit", async event => {
     event.preventDefault();
 
-    mensagemLogin.textContent =
-        "A tela está funcionando! A autenticação ainda será implementada no backend.";
+    const usuario = document.getElementById("login-usuario").value.trim();
+    const senha = document.getElementById("login-senha").value;
+
+    mensagemLogin.textContent = "Conectando ao servidor...";
+
+    try {
+        const resposta = await fetch("http://localhost:8080/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                usuario: usuario,
+                senha: senha
+            })
+        });
+
+        const resultado = await resposta.json();
+
+        mensagemLogin.textContent = resultado.mensagem;
+
+    } catch (erro) {
+        console.error("Erro ao conectar ao login:", erro);
+
+        mensagemLogin.textContent =
+            "Não foi possível conectar ao servidor AION.";
+    }
 });
+
 
 
 // =============================
 // CADASTRAR PROFISSIONAL
 // =============================
-formularioCadastro.addEventListener("submit", event => {
+
+formularioCadastro.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const nome = document.getElementById("nome").value.trim();
@@ -553,36 +605,61 @@ formularioCadastro.addEventListener("submit", event => {
         telefone
     };
 
-    profissionais.push(profissional);
+    try {
+        const resposta = await fetch("http://localhost:8080/api/profissionais", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nome,
+                servico: servicoNovo,
+                cidade
+            })
+        });
 
-    salvarLista(
-        CHAVE_CADASTROS,
-        lerListaSalva(CHAVE_CADASTROS).concat(profissional)
-    );
+        const resultado = await resposta.json();
 
-    if (!servicos.some(item =>
-        item.toLowerCase() === servicoNovo.toLowerCase()
-    )) {
-        servicos.push(servicoNovo);
+        if (!resposta.ok) {
+            alert(resultado.mensagem || "Não foi possível cadastrar.");
+            return;
+        }
+
+        profissionais.push(profissional);
+
+        salvarLista(
+            CHAVE_CADASTROS,
+            lerListaSalva(CHAVE_CADASTROS).concat(profissional)
+        );
+
+        if (!servicos.some(item =>
+            item.toLowerCase() === servicoNovo.toLowerCase()
+        )) {
+            servicos.push(servicoNovo);
+        }
+
+        modalCadastro.classList.remove("ativo");
+        formularioCadastro.reset();
+        sugestoesCadastro.innerHTML = "";
+        servico.value = "";
+        categoriaSelecionada = "";
+
+        document.querySelectorAll(".categoria").forEach(item => {
+            item.classList.remove("ativa");
+        });
+
+        tituloResultados.textContent = "Profissional cadastrado";
+        mostrarResultados([profissional]);
+
+        document.querySelector(".resultados").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    } catch (erro) {
+        console.error("Erro ao cadastrar profissional:", erro);
+        alert("Não foi possível conectar ao servidor AION.");
     }
-
-    modalCadastro.classList.remove("ativo");
-    formularioCadastro.reset();
-    sugestoesCadastro.innerHTML = "";
-    servico.value = "";
-    categoriaSelecionada = "";
-
-    document.querySelectorAll(".categoria").forEach(item => {
-        item.classList.remove("ativa");
-    });
-
-    tituloResultados.textContent = "Profissional cadastrado";
-    mostrarResultados([profissional]);
-
-    document.querySelector(".resultados").scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
 });
 
 // =============================

@@ -760,6 +760,8 @@ main {
 #formulario-cadastro .campo input,
 #formulario-cadastro .campo select {
     height: 48px;
+    line-height: normal;
+    padding: 0 16px;
 }
 
 
@@ -1162,4 +1164,29 @@ body.tema-escuro .sem-resultados { border-color: #454752; }
     .ordenacao-resultados { width: 100%; justify-content: space-between; }
     .ordenacao-resultados select { flex: 1; min-width: 0; }
     .botao-ferramenta { flex: 1; }
+}
+
+.avaliacao {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 7px;
+    margin: 8px 0 12px;
+    text-align: right;
+    width: 100%;
+}
+
+.estrelas {
+    color: #f5a623;
+    letter-spacing: 2px;
+    font-size: 1.1rem;
+}
+
+.media-avaliacao {
+    font-weight: 700;
+}
+
+.quantidade-avaliacoes {
+    color: var(--cor-texto-secundario, #777);
+    font-size: 0.85rem;
 }
