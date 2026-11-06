@@ -614,14 +614,20 @@ formularioCadastro.addEventListener("submit", async (event) => {
             body: JSON.stringify({
                 nome,
                 servico: servicoNovo,
-                cidade
+                categoria,
+                cidade,
+                cidade_nome: cidadeNome,
+                descricao,
+                telefone
             })
         });
 
         const resultado = await resposta.json();
+        console.log("Resposta do backend:", resposta.status, resultado);
 
         if (!resposta.ok) {
             alert(resultado.mensagem || "Não foi possível cadastrar.");
+            console.log("Backend respondeu OK!");
             return;
         }
 

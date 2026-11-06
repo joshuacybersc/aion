@@ -23,11 +23,24 @@ public class BancoDeDados {
             )
             """;
 
+        String profissionais = """
+            CREATE TABLE IF NOT EXISTS profissionais (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL,
+                servico TEXT NOT NULL,
+                categoria TEXT NOT NULL,
+                cidade TEXT NOT NULL,
+                cidade_nome TEXT NOT NULL,
+                descricao TEXT NOT NULL,
+                telefone TEXT NOT NULL UNIQUE
+                )""";
+
         try (
             Connection conexao = conectar();
             Statement comando = conexao.createStatement()
         ) {
             comando.execute(sql);
+            comando.execute(profissionais);
             System.out.println("Banco de dados AION inicializado!");
         } catch (SQLException erro) {
             throw new RuntimeException(
